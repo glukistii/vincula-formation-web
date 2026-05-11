@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vincula Formation - Lecteur Vidéo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0F1F35; color: #FFF; line-height: 1.6; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    header { background: #0A1628; border-bottom: 2px solid #0D9488; padding: 20px 0; margin-bottom: 40px; }
+    header h1 { font-size: 28px; }
+    header p { color: #CBD5E1; margin-top: 5px; }
+    main { display: grid; grid-template-columns: 1fr 300px; gap: 2rem; }
+    .video-player { background: #0A1628; border: 1px solid #0D9488; border-radius: 8px; padding: 20px; }
+    .placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0D9488, #0A1628); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 80px; margin-bottom: 20px; }
+    .description h2 { color: #0D9488; margin-bottom: 10px; }
+    .description p { color: #CBD5E1; }
+    .playlist { background: #0A1628; border: 1px solid #0D9488; border-radius: 8px; padding: 20px; position: sticky; top: 20px; height: fit-content; }
+    .playlist h3 { color: #0D9488; margin-bottom: 15px; }
+    .video-item { background: #0F1F35; border: 1px solid #1E293B; padding: 12px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; }
+    .video-item:hover { border-color: #0D9488; background: #1E293B; }
+    .video-item.active { background: #0D9488; color: #0A1628; border-color: #0D9488; }
+    footer { border-top: 1px solid #0D9488; padding: 20px 0; margin-top: 40px; text-align: center; color: #CBD5E1; }
+    .loading { color: #0D9488; padding: 40px; text-align: center; }
+    @media (max-width: 768px) { main { grid-template-columns: 1fr; } .playlist { position: static; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎬 Vincula Formation</h1>
+      <p>Lecteur vidéo & e-commerce</p>
+    </header>
+
+    <main>
+      <div class="video-player">
+        <div id="loading" class="loading">Chargement des vidéos...</div>
+        <div id="content" style="display:none;">
+          <div class="placeholder">▶️</div>
+          <div class="description">
+            <h2 id="videoTitle">Titre</h2>
+            <p id="videoDesc">Description</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="playlist">
+        <h3>📚 Formations</h3>
+        <div id="videoList"></div>
+      </aside>
+    </main>
+
+    <footer>
+      <p>© 2024 Vincula Formation • Formations vidéo professionnelles</p>
+    </footer>
+  </div>
+
+  <script>
+    let videos = [];
+    let current = null;
+
+    fetch('https://www.vincula-formation.com/wp-json/wp/v2/posts?categories=4&per_page=10')
+      .then(r => r.json())
+      .then(data => {
+        videos = data;
+        if (videos.length) {
+          current = 0;
+          showVideo(0);
+          renderPlaylist();
+        }
+      })
+      .catch(() => {
+        document.getElementById('loading').textContent = '❌ Erreur de chargement';
+      });
+
+    function showVideo(i) {
+      current = i;
+      const v = videos[i];
+      document.getElementById('videoTitle').textContent = v.title.rendered;
+      document.getElementById('videoDesc').innerHTML = v.content.rendered;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      document.querySelectorAll('.video-item').forEach((el, idx) => {
+        el.classList.toggle('active', idx === i);
+      });
+    }
+
+    function renderPlaylist() {
+      const html = videos.map((v, i) => `
+        <div class="video-item ${i === 0 ? 'active' : ''}" onclick="showVideo(${i})">
+          🎥 ${v.title.rendered}
+        </div>
+      `).join('');
+      document.getElementById('videoList').innerHTML = html;
+    }
+  </script>
+</body>
+</html>
