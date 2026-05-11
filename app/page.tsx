@@ -1,21 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import './page.css'
 
 interface Video {
   id: number
-  title: {
-    rendered: string
-  }
-  content: {
-    rendered: string
-  }
-  _links?: {
-    'wp:featuredmedia'?: Array<{
-      href: string
-    }>
-  }
+  title: { rendered: string }
+  content: { rendered: string }
 }
 
 export default function Home() {
