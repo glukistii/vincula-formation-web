@@ -71,9 +71,11 @@
     .course-card p { color: #666; font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
     .course-price { font-size: 24px; color: #CA8A04; font-weight: 700; margin-bottom: 16px; }
     .course-price-orig { font-size: 13px; color: #999; text-decoration: line-through; margin-left: 8px; }
-    .course-btn { width: 100%; padding: 13px 16px; background: #0D9488; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px; transition: all 0.3s; }
-    .course-btn:hover { background: #0FAB96; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3); }
+    .course-btn { width: 100%; padding: 14px 24px; background: #0D9488; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 15px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .course-btn:hover { background: #0FAB96; box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35); transform: translateY(-2px); }
     .course-btn.purchased { background: #10B981; }
+    .btn-icon { font-size: 18px; }
+    .btn-badge { background: #CA8A04; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-left: 4px; }
     .empty-state { text-align: center; padding: 60px 40px; color: #999; }
     .empty-state-icon { font-size: 64px; margin-bottom: 20px; }
     .empty-state p { font-size: 16px; margin: 0; }
@@ -146,8 +148,14 @@
           <p>Formations en ligne</p>
         </div>
       </div>
-      <div id="authSection">
-        <button class="auth-btn" onclick="openAuthModal()">Se Connecter</button>
+      <div style="display: flex; gap: 15px; align-items: center;">
+        <button class="auth-btn" style="border-radius: 50px; padding: 12px 24px; position: relative;" onclick="switchSection(this, 'boutique')">
+          <span>🛒 Panier</span>
+          <span class="btn-badge" id="cartBadge" style="position: absolute; top: -8px; right: -8px; margin: 0; width: 28px; height: 28px; font-size: 13px;">0</span>
+        </button>
+        <div id="authSection">
+          <button class="auth-btn" style="border-radius: 50px; padding: 12px 24px;" onclick="openAuthModal()">🔐 Se Connecter</button>
+        </div>
       </div>
     </header>
 
@@ -280,14 +288,15 @@
         authSection.innerHTML = `
           <div class="user-info">
             <span>👤 ${currentUser.name}</span>
-            <button class="auth-btn logout-btn" onclick="handleLogout()">📤 Déconnexion</button>
+            <button class="auth-btn logout-btn" style="border-radius: 50px; padding: 10px 20px;" onclick="handleLogout()">📤 Déconnexion</button>
           </div>
         `;
         renderBoutique();
         renderAchats();
       } else {
-        authSection.innerHTML = '<button class="auth-btn" onclick="openAuthModal()">🔐 Se Connecter</button>';
+        authSection.innerHTML = '<button class="auth-btn" style="border-radius: 50px; padding: 12px 24px;" onclick="openAuthModal()">🔐 Se Connecter</button>';
       }
+      updateCartBadge();
     }
 
     // ===== NAVIGATION =====
@@ -374,7 +383,8 @@
                 <button class="course-btn ${purchasedCourses[course.id] ? 'purchased' : ''}"
                         onclick="purchaseCourse(${course.id})"
                         ${purchasedCourses[course.id] ? 'disabled' : ''}>
-                  ${purchasedCourses[course.id] ? '✅ Acheté' : 'Ajouter au panier'}
+                  <span class="btn-icon">${purchasedCourses[course.id] ? '✓' : '🛒'}</span>
+                  ${purchasedCourses[course.id] ? 'Acheté' : 'Ajouter au panier'}
                 </button>
               </div>
             </div>
@@ -383,6 +393,11 @@
         html += '</div></div>';
       });
       boutiqueListe.innerHTML = html;
+    }
+
+    function updateCartBadge() {
+      const count = Object.keys(purchasedCourses).filter(id => purchasedCourses[id]).length;
+      document.getElementById('cartBadge').textContent = count;
     }
 
     function purchaseCourse(courseId) {
@@ -398,6 +413,7 @@
       const course = allCourses.find(c => c.id === courseId);
       purchasedCourses[courseId] = true;
       alert(`✅ Formation "${course.title}" achetée!\n💰 ${course.price}€`);
+      updateCartBadge();
       renderBoutique();
       renderAchats();
     }
@@ -436,11 +452,13 @@
         initApp();
         renderBoutique();
         renderAchats();
+        updateCartBadge();
       });
     } else {
       initApp();
       renderBoutique();
       renderAchats();
+      updateCartBadge();
     }
   </script>
 </body>
