@@ -481,7 +481,7 @@
       const html = `
         <div class="purchased-grid">
           ${purchased.map(course => `
-            <div class="purchased-thumbnail" title="${course.title}">
+            <div class="purchased-thumbnail" title="${course.title}" onclick="playPurchasedCourse(${course.id}, '${course.title.replace(/'/g, "\\'")}', '${course.desc.replace(/'/g, "\\'")}')">
               <img src="${course.image}" alt="${course.title}" onerror="this.style.display='none'">
               <div class="purchased-thumbnail-overlay">
                 <span>▶️</span>
@@ -491,6 +491,29 @@
         </div>
       `;
       purchasedList.innerHTML = html;
+    }
+
+    // ===== PLAY PURCHASED COURSE =====
+    function playPurchasedCourse(courseId, title, desc) {
+      const content = document.getElementById('content');
+      const placeholder = content.querySelector('.placeholder');
+      const description = content.querySelector('.description');
+
+      // Créer un lecteur vidéo HTML5
+      placeholder.innerHTML = `
+        <video controls style="width: 100%; height: 100%; border-radius: 6px; background: #000;">
+          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la vidéo HTML5.
+        </video>
+      `;
+
+      document.getElementById('videoTitle').textContent = title;
+      document.getElementById('videoDesc').textContent = desc;
+      document.getElementById('loading').style.display = 'none';
+      content.style.display = 'block';
+
+      // Scroll vers le lecteur
+      document.querySelector('.video-player').scrollIntoView({ behavior: 'smooth' });
     }
 
     // Init
