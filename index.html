@@ -52,16 +52,27 @@
     .section > h2 { font-size: 32px; color: #1a1a1a; font-weight: 800; margin-bottom: 10px; font-family: 'Poppins', sans-serif; }
     .section > p { color: #666; font-size: 15px; font-family: 'Poppins', sans-serif; }
 
-    main { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; background: #FFFFFF; }
+    main { display: grid; grid-template-columns: 1fr 280px; gap: 2rem; background: #FFFFFF; }
     .video-player { background: #FFFFFF; border: 1px solid #e0e0e0; border-radius: 8px; padding: 24px; }
     .placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0D9488 0%, #0FAB96 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 80px; margin-bottom: 24px; border-radius: 6px; }
     .description h2 { color: #1a1a1a; margin-bottom: 12px; font-size: 24px; font-weight: 700; }
     .description p { color: #666; font-size: 15px; line-height: 1.6; }
-    .playlist { background: #FFFFFF; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; position: sticky; top: 20px; height: fit-content; }
-    .playlist h3 { color: #1a1a1a; margin-bottom: 15px; font-size: 16px; font-weight: 700; }
+    .playlist { display: none; }
     .video-item { background: #f5f5f5; border: 1px solid #e0e0e0; padding: 12px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; color: #666; font-size: 14px; }
     .video-item:hover { border-color: #0D9488; background: #f0f8f7; }
     .video-item.active { background: #0D9488; color: white; border-color: #0D9488; }
+
+    .purchased-videos { background: #FFFFFF; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; position: sticky; top: 20px; height: fit-content; }
+    .purchased-videos h3 { color: #1a1a1a; margin-bottom: 15px; font-size: 16px; font-weight: 700; }
+    .purchased-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .purchased-thumbnail { position: relative; aspect-ratio: 1; background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.3s; }
+    .purchased-thumbnail:hover { border-color: #0D9488; transform: scale(1.05); box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2); }
+    .purchased-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+    .purchased-thumbnail-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+    .purchased-thumbnail:hover .purchased-thumbnail-overlay { opacity: 1; }
+    .purchased-thumbnail-overlay span { color: white; font-size: 24px; }
+    .purchased-empty { text-align: center; padding: 30px 20px; color: #999; }
+    .purchased-empty p { font-size: 13px; margin: 0; }
     .loading { color: #0D9488; padding: 60px 40px; text-align: center; font-size: 16px; }
     footer { border-top: 1px solid #e0e0e0; padding: 30px 0; margin-top: 60px; text-align: center; color: #999; font-size: 13px; }
 
@@ -187,6 +198,11 @@
         <h3>📚 Formations</h3>
         <div id="videoList"></div>
       </aside>
+
+      <aside class="purchased-videos">
+        <h3>🎬 Mes Vidéos</h3>
+        <div id="purchasedList"></div>
+      </aside>
     </main>
 
     <!-- Boutique Section -->
@@ -297,6 +313,7 @@
         `;
         renderBoutique();
         renderAchats();
+        renderPurchasedVideos();
       } else {
         authSection.innerHTML = '<button class="auth-btn" style="border-radius: 50px; padding: 12px 24px;" onclick="openAuthModal()">🔐 Se Connecter</button>';
       }
@@ -420,6 +437,7 @@
       updateCartBadge();
       renderBoutique();
       renderAchats();
+      renderPurchasedVideos();
     }
 
     // ===== MES ACHATS =====
@@ -450,18 +468,49 @@
       `;
     }
 
+    // ===== PURCHASED VIDEOS PANEL =====
+    function renderPurchasedVideos() {
+      const purchasedList = document.getElementById('purchasedList');
+      const purchased = allCourses.filter(c => purchasedCourses[c.id]);
+
+      if (purchased.length === 0) {
+        purchasedList.innerHTML = `
+          <div class="purchased-empty">
+            <p>Achetez une formation pour la voir ici!</p>
+          </div>
+        `;
+        return;
+      }
+
+      const html = `
+        <div class="purchased-grid">
+          ${purchased.map(course => `
+            <div class="purchased-thumbnail" title="${course.title}">
+              <img src="${course.image}" alt="${course.title}" onerror="this.style.display='none'">
+              <div class="purchased-thumbnail-overlay">
+                <span>▶️</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      purchasedList.innerHTML = html;
+    }
+
     // Init
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         initApp();
         renderBoutique();
         renderAchats();
+        renderPurchasedVideos();
         updateCartBadge();
       });
     } else {
       initApp();
       renderBoutique();
       renderAchats();
+      renderPurchasedVideos();
       updateCartBadge();
     }
   </script>
