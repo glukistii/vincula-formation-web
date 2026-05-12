@@ -225,7 +225,7 @@
     // Supabase configuration
     const SUPABASE_URL = 'https://vapffndxsudqegyrlvij.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcGZmbmR4c3VkcWVneXJsdmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDIxOTQsImV4cCI6MjA5NDE3ODE5NH0.OWDlxfALN3oq6LxgRLTfeMIIkAsZdR7NPoS2Dkd3lnA';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let videos = [];
     let current = null;
@@ -281,7 +281,7 @@
 
       try {
         // Login with Supabase
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await sbClient.auth.signInWithPassword({
           email,
           password
         });
@@ -328,7 +328,7 @@
 
       try {
         // Sign up with Supabase
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await sbClient.auth.signUp({
           email,
           password,
           options: {
@@ -358,7 +358,7 @@
 
     async function handleLogout() {
       try {
-        await supabase.auth.signOut();
+        await sbClient.auth.signOut();
       } catch (err) {
         console.error('Logout error:', err);
       }
