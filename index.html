@@ -421,8 +421,8 @@
     function showVideo(i) {
       current = i;
       const v = videos[i];
-      document.getElementById('videoTitle').textContent = v.title.rendered;
-      document.getElementById('videoDesc').innerHTML = v.content.rendered;
+      document.getElementById('videoTitle').textContent = v.title || 'Vidéo';
+      document.getElementById('videoDesc').textContent = v.description || '';
       document.getElementById('loading').style.display = 'none';
       document.getElementById('content').style.display = 'block';
       document.querySelectorAll('.video-item').forEach((el, idx) => {
@@ -433,7 +433,7 @@
     function renderPlaylist() {
       const html = videos.map((v, i) => `
         <div class="video-item ${i === 0 ? 'active' : ''}" onclick="showVideo(${i})">
-          🎥 ${v.title.rendered}
+          🎥 ${v.title || 'Vidéo'}
         </div>
       `).join('');
       document.getElementById('videoList').innerHTML = html;
