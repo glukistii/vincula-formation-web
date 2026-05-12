@@ -6,69 +6,87 @@
   <title>Vincula Formation - Lecteur Vidéo</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0F1F35; color: #FFF; line-height: 1.6; }
-    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-    header { background: linear-gradient(135deg, #0A1628 0%, #0F1F35 100%); border-bottom: 3px solid #0D9488; padding: 25px 0; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.1); }
-    header .brand { flex: 1; }
-    header h1 { font-size: 32px; margin-bottom: 8px; background: linear-gradient(135deg, #0D9488, #0FAB96); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700; }
-    header p { color: #CBD5E1; font-size: 14px; letter-spacing: 0.5px; }
-    .auth-btn { background: #0D9488; color: #0A1628; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.3s; }
-    .auth-btn:hover { background: #0FAB96; transform: translateY(-2px); }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: #333; line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    header { background: #FFFFFF; border-bottom: 1px solid #e0e0e0; padding: 20px 0; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+    header .brand { flex: 1; display: flex; align-items: center; gap: 15px; }
+    header h1 { font-size: 24px; margin: 0; color: #1a1a1a; font-weight: 700; letter-spacing: -0.5px; }
+    header p { color: #666; font-size: 13px; letter-spacing: 0.5px; margin: 0; }
+    .logo-icon { width: 45px; height: 45px; background: linear-gradient(135deg, #0D9488 0%, #0FAB96 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; }
+    .auth-btn { background: #0D9488; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+    .auth-btn:hover { background: #0FAB96; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3); }
     .logout-btn { background: #CA8A04; }
     .logout-btn:hover { background: #E8A715; }
-    .user-info { color: #0D9488; font-weight: bold; display: flex; gap: 15px; align-items: center; }
+    .user-info { color: #0D9488; font-weight: 600; display: flex; gap: 15px; align-items: center; font-size: 14px; }
 
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
     .modal.active { display: flex; }
-    .modal-content { background: #0A1628; border: 2px solid #0D9488; border-radius: 8px; padding: 40px; max-width: 500px; width: 90%; }
-    .modal-content h2 { color: #0D9488; margin-bottom: 20px; font-size: 24px; }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; color: #CBD5E1; margin-bottom: 5px; font-size: 14px; }
-    .form-group input { width: 100%; padding: 12px; background: #0F1F35; border: 1px solid #1E293B; border-radius: 6px; color: #FFF; font-size: 14px; }
-    .form-group input:focus { outline: none; border-color: #0D9488; }
-    .form-btn { width: 100%; padding: 12px; background: #0D9488; color: #0A1628; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; margin-bottom: 15px; }
-    .form-btn:hover { background: #0FAB96; }
-    .toggle-form { text-align: center; color: #CBD5E1; font-size: 13px; }
-    .toggle-form a { color: #0D9488; cursor: pointer; text-decoration: underline; }
-    .close-modal { float: right; font-size: 28px; color: #CBD5E1; cursor: pointer; margin-top: -10px; }
+    .modal-content { background: #FFFFFF; border-radius: 12px; padding: 50px; max-width: 450px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal-content h2 { color: #1a1a1a; margin-bottom: 30px; font-size: 28px; font-weight: 700; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; color: #666; margin-bottom: 8px; font-size: 14px; font-weight: 500; }
+    .form-group input { width: 100%; padding: 14px; background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 6px; color: #333; font-size: 14px; transition: all 0.3s; }
+    .form-group input:focus { outline: none; border-color: #0D9488; background: white; box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
+    .form-btn { width: 100%; padding: 14px; background: #0D9488; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 16px; margin-bottom: 15px; transition: all 0.3s; }
+    .form-btn:hover { background: #0FAB96; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3); }
+    .toggle-form { text-align: center; color: #666; font-size: 14px; }
+    .toggle-form a { color: #0D9488; cursor: pointer; text-decoration: none; font-weight: 600; }
+    .toggle-form a:hover { text-decoration: underline; }
+    .close-modal { float: right; font-size: 32px; color: #999; cursor: pointer; margin-top: -10px; font-weight: 300; line-height: 1; }
+    .close-modal:hover { color: #333; }
 
-    .nav-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #1E293B; }
-    .nav-tab { padding: 12px 20px; background: transparent; border: none; color: #CBD5E1; cursor: pointer; font-size: 14px; font-weight: bold; border-bottom: 3px solid transparent; transition: all 0.3s; }
+    .nav-tabs { display: flex; gap: 0; margin-bottom: 40px; border-bottom: 2px solid #e0e0e0; }
+    .nav-tab { padding: 16px 30px; background: transparent; border: none; color: #666; cursor: pointer; font-size: 15px; font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.3s; margin-bottom: -2px; }
     .nav-tab:hover { color: #0D9488; }
     .nav-tab.active { color: #0D9488; border-bottom-color: #0D9488; }
 
     .section { display: none; }
     .section.active { display: block; }
 
-    main { display: grid; grid-template-columns: 1fr 300px; gap: 2rem; }
-    .video-player { background: #0A1628; border: 1px solid #0D9488; border-radius: 8px; padding: 20px; }
-    .placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0D9488, #0A1628); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 80px; margin-bottom: 20px; }
-    .description h2 { color: #0D9488; margin-bottom: 10px; }
-    .description p { color: #CBD5E1; }
-    .playlist { background: #0A1628; border: 1px solid #0D9488; border-radius: 8px; padding: 20px; position: sticky; top: 20px; height: fit-content; }
-    .playlist h3 { color: #0D9488; margin-bottom: 15px; }
-    .video-item { background: #0F1F35; border: 1px solid #1E293B; padding: 12px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; }
-    .video-item:hover { border-color: #0D9488; background: #1E293B; }
-    .video-item.active { background: #0D9488; color: #0A1628; border-color: #0D9488; }
-    .loading { color: #0D9488; padding: 40px; text-align: center; }
-    footer { border-top: 1px solid #0D9488; padding: 20px 0; margin-top: 40px; text-align: center; color: #CBD5E1; }
+    .section > div:first-child { margin-bottom: 40px; }
+    .section > h2, .section > p { margin: 0; }
+    .section > h2 { font-size: 32px; color: #1a1a1a; font-weight: 700; margin-bottom: 10px; }
+    .section > p { color: #666; font-size: 15px; }
 
-    .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-    .course-card { background: #0A1628; border: 1px solid #1E293B; border-radius: 10px; padding: 25px; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
-    .course-card:hover { border-color: #0D9488; box-shadow: 0 8px 20px rgba(13, 148, 136, 0.2); transform: translateY(-4px); }
-    .course-card h3 { color: #0D9488; margin-bottom: 12px; font-size: 16px; font-weight: 600; line-height: 1.4; }
-    .course-card p { color: #CBD5E1; font-size: 13px; margin-bottom: 20px; line-height: 1.5; }
-    .course-price { font-size: 24px; color: #CA8A04; font-weight: 700; margin-bottom: 20px; }
-    .course-btn { width: 100%; padding: 12px 16px; background: #0D9488; color: #0A1628; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; }
-    .course-btn:hover { background: #0FAB96; transform: translateY(-2px); }
+    main { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
+    .video-player { background: #FFFFFF; border: 1px solid #e0e0e0; border-radius: 8px; padding: 24px; }
+    .placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0D9488 0%, #0FAB96 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 80px; margin-bottom: 24px; border-radius: 6px; }
+    .description h2 { color: #1a1a1a; margin-bottom: 12px; font-size: 24px; font-weight: 700; }
+    .description p { color: #666; font-size: 15px; line-height: 1.6; }
+    .playlist { background: #FFFFFF; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; position: sticky; top: 20px; height: fit-content; }
+    .playlist h3 { color: #1a1a1a; margin-bottom: 15px; font-size: 16px; font-weight: 700; }
+    .video-item { background: #f5f5f5; border: 1px solid #e0e0e0; padding: 12px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; color: #666; font-size: 14px; }
+    .video-item:hover { border-color: #0D9488; background: #f0f8f7; }
+    .video-item.active { background: #0D9488; color: white; border-color: #0D9488; }
+    .loading { color: #0D9488; padding: 60px 40px; text-align: center; font-size: 16px; }
+    footer { border-top: 1px solid #e0e0e0; padding: 30px 0; margin-top: 60px; text-align: center; color: #999; font-size: 13px; }
+
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; margin-bottom: 20px; }
+    .course-card { background: #FFFFFF; border: 1px solid #e0e0e0; border-radius: 8px; padding: 24px; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); overflow: hidden; }
+    .course-card:hover { border-color: #0D9488; box-shadow: 0 8px 24px rgba(13, 148, 136, 0.15); transform: translateY(-4px); }
+    .course-badge { display: inline-block; background: #CA8A04; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .course-card h3 { color: #1a1a1a; margin-bottom: 12px; font-size: 17px; font-weight: 600; line-height: 1.4; }
+    .course-card p { color: #666; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+    .course-price { font-size: 28px; color: #CA8A04; font-weight: 700; margin-bottom: 20px; }
+    .course-btn { width: 100%; padding: 13px 16px; background: #0D9488; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 15px; transition: all 0.3s; }
+    .course-btn:hover { background: #0FAB96; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3); }
     .course-btn.purchased { background: #10B981; }
-    .empty-state { text-align: center; padding: 40px; color: #CBD5E1; }
-    .empty-state-icon { font-size: 60px; margin-bottom: 20px; }
+    .empty-state { text-align: center; padding: 60px 40px; color: #999; }
+    .empty-state-icon { font-size: 64px; margin-bottom: 20px; }
+    .empty-state p { font-size: 16px; margin: 0; }
 
     @media (max-width: 768px) {
       main { grid-template-columns: 1fr; }
-      .playlist { position: static; }
-      header { flex-direction: column; gap: 15px; }
+      .playlist { position: static; margin-top: 30px; }
+      header { flex-direction: column; gap: 20px; text-align: center; }
+      header .brand { justify-content: center; }
+      .nav-tabs { flex-direction: column; border-bottom: none; }
+      .nav-tab { border-bottom: none; border-left: 3px solid transparent; padding-left: 20px; text-align: left; }
+      .nav-tab.active { border-left-color: #0D9488; border-bottom: none; }
+      .shop-grid { grid-template-columns: 1fr; }
+      .modal-content { padding: 35px 25px; }
+      h1 { font-size: 20px; }
+      .section > h2 { font-size: 24px; }
     }
   </style>
 </head>
@@ -119,11 +137,14 @@
   <div class="container">
     <header>
       <div class="brand">
-        <h1>🎬 Vincula Formation</h1>
-        <p>Lecteur vidéo & e-commerce</p>
+        <div class="logo-icon">V</div>
+        <div>
+          <h1>Vincula Formation</h1>
+          <p>Formation en ligne</p>
+        </div>
       </div>
       <div id="authSection">
-        <button class="auth-btn" onclick="openAuthModal()">🔐 Se Connecter</button>
+        <button class="auth-btn" onclick="openAuthModal()">Se Connecter</button>
       </div>
     </header>
 
@@ -155,19 +176,15 @@
 
     <!-- Boutique Section -->
     <section id="boutique-section" class="section">
-      <div style="margin-bottom: 30px;">
-        <h2 style="color: #0D9488; margin-bottom: 8px; font-size: 28px;">🛍️ Boutique Vincula Formation</h2>
-        <p style="color: #CBD5E1; font-size: 14px;">Tous nos formations, vidéos et livres en accès immédiat</p>
-      </div>
+      <h2>Boutique Vincula Formation</h2>
+      <p>Tous nos formations, vidéos et livres en accès immédiat</p>
       <div id="boutiqueListe"></div>
     </section>
 
     <!-- Mes Achats Section -->
     <section id="achats-section" class="section">
-      <div style="margin-bottom: 30px;">
-        <h2 style="color: #0D9488; margin-bottom: 8px; font-size: 28px;">📚 Mes Formations Achetées</h2>
-        <p style="color: #CBD5E1; font-size: 14px;">Retrouvez toutes vos formations achetées ici</p>
-      </div>
+      <h2>Mes Formations Achetées</h2>
+      <p>Retrouvez toutes vos formations achetées ici</p>
       <div id="achatsList"></div>
     </section>
 
@@ -333,23 +350,23 @@
 
       let html = '';
       Object.entries(byCategory).forEach(([category, courses]) => {
-        html += `<div style="margin-bottom: 40px;">
-          <h3 style="color: #0D9488; font-size: 18px; margin-bottom: 20px; border-bottom: 2px solid #1E293B; padding-bottom: 10px;">${category}</h3>
+        html += `<div style="margin-bottom: 50px;">
+          <h3 style="color: #1a1a1a; font-size: 20px; margin-bottom: 25px; border-bottom: 2px solid #e0e0e0; padding-bottom: 12px; font-weight: 700;">${category}</h3>
           <div class="shop-grid">`;
 
         courses.forEach(course => {
           html += `
             <div class="course-card">
-              ${course.badge ? `<div style="background: #CA8A04; color: #0A1628; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: inline-block;">${course.badge}</div>` : ''}
+              ${course.badge ? `<span class="course-badge">${course.badge}</span>` : ''}
               <h3>${course.title}</h3>
               <p>${course.desc}</p>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <div style="margin-bottom: 20px;">
                 <span class="course-price">${course.price.toFixed(0)}€</span>
               </div>
               <button class="course-btn ${purchasedCourses[course.id] ? 'purchased' : ''}"
                       onclick="purchaseCourse(${course.id})"
                       ${purchasedCourses[course.id] ? 'disabled' : ''}>
-                ${purchasedCourses[course.id] ? '✅ Acheté' : '🛒 Acheter'}
+                ${purchasedCourses[course.id] ? '✅ Acheté' : 'Ajouter au panier'}
               </button>
             </div>
           `;
@@ -390,14 +407,14 @@
         return;
       }
       achatsList.innerHTML = `
-        <div style="background: #0A1628; border-radius: 8px; padding: 20px;">
+        <div style="background: #FFFFFF; border-radius: 8px; padding: 20px;">
           ${purchased.map(course => `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0F1F35; border-radius: 6px; border-left: 4px solid #0D9488; margin-bottom: 10px;">
-              <div>
-                <h4 style="color: #0D9488; margin-bottom: 5px;">▶️ ${course.title}</h4>
-                <p style="color: #CBD5E1; font-size: 13px;">${course.desc}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 18px; background: #f9f9f9; border-radius: 6px; border-left: 4px solid #0D9488; margin-bottom: 12px;">
+              <div style="flex: 1;">
+                <h4 style="color: #1a1a1a; margin-bottom: 6px; font-weight: 600; font-size: 15px;">▶️ ${course.title}</h4>
+                <p style="color: #666; font-size: 13px; margin: 0;">${course.desc}</p>
               </div>
-              <button class="course-btn" style="width: 120px;" onclick="alert('🎬 ${course.title}')">📺 Regarder</button>
+              <button class="course-btn" style="width: 140px; margin-left: 15px; flex-shrink: 0;" onclick="alert('🎬 ${course.title}')">Regarder</button>
             </div>
           `).join('')}
         </div>
