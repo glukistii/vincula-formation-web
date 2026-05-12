@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', sans-serif; background: #FFFFFF; color: #333; line-height: 1.6; font-weight: 400; }
@@ -221,6 +222,11 @@
   </div>
 
   <script>
+    // Supabase configuration
+    const SUPABASE_URL = 'https://vapffndxsudqegyrlvij.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcGZmbmR4c3VkcWVneXJsdmlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MDIxOTQsImV4cCI6MjA5NDE3ODE5NH0.OWDlxfALN3oq6LxgRLTfeMIIkAsZdR7NPoS2Dkd3lnA';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     let videos = [];
     let current = null;
     let currentUser = null;
@@ -265,20 +271,53 @@
       registerForm.style.display = registerForm.style.display === 'none' ? 'block' : 'none';
     }
 
-    function handleLogin() {
+    async function handleLogin() {
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
       if (!email || !password) {
         alert('⚠️ Veuillez remplir tous les champs');
         return;
       }
-      currentUser = { email: email, name: email.split('@')[0] };
-      closeAuthModal();
-      updateAuthUI();
-      alert('✅ Bienvenue ' + currentUser.name + '!');
+
+      try {
+        // Login with Supabase
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+          alert('❌ Erreur: ' + error.message);
+          return;
+        }
+
+        currentUser = {
+          email: email,
+          name: email.split('@')[0],
+          id: data.user.id
+        };
+
+        // Sync with WordPress
+        console.log('Syncing with WordPress...');
+        await fetch('/api/sync-wordpress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        // Load purchases from Supabase
+        await loadPurchasedCourses();
+
+        closeAuthModal();
+        updateAuthUI();
+        alert('✅ Bienvenue ' + currentUser.name + '!');
+      } catch (err) {
+        console.error('Login error:', err);
+        alert('❌ Erreur: ' + err.message);
+      }
     }
 
-    function handleRegister() {
+    async function handleRegister() {
       const name = document.getElementById('registerName').value;
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
@@ -286,14 +325,45 @@
         alert('⚠️ Veuillez remplir tous les champs');
         return;
       }
-      currentUser = { email: email, name: name };
-      closeAuthModal();
-      updateAuthUI();
-      alert('✅ Compte créé! Bienvenue ' + currentUser.name + '!');
+
+      try {
+        // Sign up with Supabase
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { name }
+          }
+        });
+
+        if (error) {
+          alert('❌ Erreur: ' + error.message);
+          return;
+        }
+
+        currentUser = {
+          email: email,
+          name: name,
+          id: data.user.id
+        };
+
+        closeAuthModal();
+        updateAuthUI();
+        alert('✅ Compte créé! Bienvenue ' + name + '!');
+      } catch (err) {
+        console.error('Register error:', err);
+        alert('❌ Erreur: ' + err.message);
+      }
     }
 
-    function handleLogout() {
+    async function handleLogout() {
+      try {
+        await supabase.auth.signOut();
+      } catch (err) {
+        console.error('Logout error:', err);
+      }
       currentUser = null;
+      purchasedCourses = {};
       updateAuthUI();
       alert('👋 Vous avez été déconnecté');
     }
@@ -464,12 +534,47 @@
       `;
     }
 
+    // ===== LOAD PURCHASED COURSES FROM SUPABASE =====
+    async function loadPurchasedCourses() {
+      if (!currentUser || !currentUser.id) {
+        console.warn('User not loaded');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/purchases?userId=${currentUser.id}`);
+        const data = await response.json();
+
+        if (data.error) {
+          console.error('Error fetching purchases:', data.error);
+          return;
+        }
+
+        purchasedCourses = {};
+        if (data.purchases && Array.isArray(data.purchases)) {
+          data.purchases.forEach(purchase => {
+            purchasedCourses[purchase.course_id] = {
+              courseId: purchase.course_id,
+              title: purchase.courses?.title || 'Formation',
+              description: purchase.courses?.description || '',
+              image: purchase.courses?.image_url || ''
+            };
+          });
+        }
+
+        console.log('Loaded purchases:', Object.keys(purchasedCourses).length);
+        renderPurchasedVideos();
+      } catch (err) {
+        console.error('Error loading purchases:', err);
+      }
+    }
+
     // ===== PURCHASED VIDEOS PANEL =====
     function renderPurchasedVideos() {
       const purchasedList = document.getElementById('purchasedList');
-      const purchased = allCourses.filter(c => purchasedCourses[c.id]);
+      const purchasedArray = Object.values(purchasedCourses);
 
-      if (purchased.length === 0) {
+      if (purchasedArray.length === 0) {
         purchasedList.innerHTML = `
           <div class="purchased-empty">
             <p>Achetez une formation pour la voir ici!</p>
@@ -480,8 +585,8 @@
 
       const html = `
         <div class="purchased-grid">
-          ${purchased.map(course => `
-            <div class="purchased-thumbnail" title="${course.title}" onclick="playPurchasedCourse(${course.id}, '${course.title.replace(/'/g, "\\'")}', '${course.desc.replace(/'/g, "\\'")}')">
+          ${purchasedArray.map((course, idx) => `
+            <div class="purchased-thumbnail" title="${course.title}" onclick="playPurchasedCourse('${course.courseId}', '${course.title.replace(/'/g, "\\'")}', '${course.description.replace(/'/g, "\\'")}')">
               <img src="${course.image}" alt="${course.title}" onerror="this.style.display='none'">
               <div class="purchased-thumbnail-overlay">
                 <span>▶️</span>
