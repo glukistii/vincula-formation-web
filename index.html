@@ -60,23 +60,52 @@
     let videos = [];
     let current = null;
 
-    fetch('https://www.vincula-formation.com/wp-json/wp/v2/posts?per_page=10')
-      .then(r => r.json())
-      .then(data => {
-        videos = data;
-        if (videos.length) {
-          current = 0;
-          showVideo(0);
-          renderPlaylist();
-        }
-      })
-      .catch(() => {
-        document.getElementById('loading').textContent = '❌ Erreur de chargement';
-      });
+    console.log('🚀 Script starting...');
+    console.log('DOM ready:', document.readyState);
+
+    function initApp() {
+      console.log('📡 Fetching videos from local API...');
+      const apiUrl = '/api/videos';
+      console.log('URL:', apiUrl);
+
+      fetch(apiUrl)
+        .then(r => {
+          console.log('✅ Response received:', r.status, r.statusText);
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
+        .then(data => {
+          console.log('✅ Data parsed. Videos count:', data.length);
+          if (Array.isArray(data) && data.length > 0) {
+            console.log('First video:', data[0]);
+          } else {
+            console.warn('⚠️ Data is not array or empty:', data);
+          }
+          return data;
+        })
+        .then(data => {
+          videos = data;
+          if (Array.isArray(videos) && videos.length) {
+            current = 0;
+            showVideo(0);
+            renderPlaylist();
+            console.log('✅ App initialized successfully with', videos.length, 'videos');
+          } else {
+            console.warn('⚠️ No videos returned from API');
+            document.getElementById('loading').textContent = '⚠️ Aucune vidéo trouvée';
+          }
+        })
+        .catch(err => {
+          console.error('❌ Error:', err);
+          document.getElementById('loading').textContent = `❌ Erreur: ${err.message}`;
+        });
+    }
+
 
     function showVideo(i) {
       current = i;
       const v = videos[i];
+      console.log('📺 Showing video', i, ':', v.title.rendered);
       document.getElementById('videoTitle').textContent = v.title.rendered;
       document.getElementById('videoDesc').innerHTML = v.content.rendered;
       document.getElementById('loading').style.display = 'none';
@@ -87,12 +116,22 @@
     }
 
     function renderPlaylist() {
+      console.log('🎬 Rendering playlist with', videos.length, 'videos');
       const html = videos.map((v, i) => `
         <div class="video-item ${i === 0 ? 'active' : ''}" onclick="showVideo(${i})">
           🎥 ${v.title.rendered}
         </div>
       `).join('');
       document.getElementById('videoList').innerHTML = html;
+    }
+
+    // Start when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+      console.log('📋 DOM not ready yet, waiting for DOMContentLoaded...');
+    } else {
+      console.log('📋 DOM already ready, initializing now...');
+      initApp();
     }
   </script>
 </body>
