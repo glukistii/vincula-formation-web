@@ -8,12 +8,16 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0F1F35; color: #FFF; line-height: 1.6; }
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-    header { background: #0A1628; border-bottom: 2px solid #0D9488; padding: 20px 0; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+    header { background: #0A1628; border-bottom: 2px solid #0D9488; padding: 20px 0; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
     header .brand { flex: 1; }
-    header h1 { font-size: 28px; }
-    header p { color: #CBD5E1; margin-top: 5px; }
+    header h1 { font-size: 28px; margin-bottom: 5px; }
+    header p { color: #CBD5E1; }
     .auth-btn { background: #0D9488; color: #0A1628; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.3s; }
     .auth-btn:hover { background: #0FAB96; transform: translateY(-2px); }
+    .logout-btn { background: #CA8A04; }
+    .logout-btn:hover { background: #E8A715; }
+    .user-info { color: #0D9488; font-weight: bold; display: flex; gap: 15px; align-items: center; }
+
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
     .modal.active { display: flex; }
     .modal-content { background: #0A1628; border: 2px solid #0D9488; border-radius: 8px; padding: 40px; max-width: 500px; width: 90%; }
@@ -22,14 +26,20 @@
     .form-group label { display: block; color: #CBD5E1; margin-bottom: 5px; font-size: 14px; }
     .form-group input { width: 100%; padding: 12px; background: #0F1F35; border: 1px solid #1E293B; border-radius: 6px; color: #FFF; font-size: 14px; }
     .form-group input:focus { outline: none; border-color: #0D9488; }
-    .form-btn { width: 100%; padding: 12px; background: #0D9488; color: #0A1628; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
+    .form-btn { width: 100%; padding: 12px; background: #0D9488; color: #0A1628; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; margin-bottom: 15px; }
     .form-btn:hover { background: #0FAB96; }
-    .toggle-form { text-align: center; margin-top: 15px; color: #CBD5E1; font-size: 13px; }
+    .toggle-form { text-align: center; color: #CBD5E1; font-size: 13px; }
     .toggle-form a { color: #0D9488; cursor: pointer; text-decoration: underline; }
     .close-modal { float: right; font-size: 28px; color: #CBD5E1; cursor: pointer; margin-top: -10px; }
-    .user-info { color: #0D9488; font-weight: bold; }
-    .logout-btn { background: #CA8A04; padding: 8px 15px; font-size: 12px; }
-    .logout-btn:hover { background: #E8A715; }
+
+    .nav-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #1E293B; }
+    .nav-tab { padding: 12px 20px; background: transparent; border: none; color: #CBD5E1; cursor: pointer; font-size: 14px; font-weight: bold; border-bottom: 3px solid transparent; transition: all 0.3s; }
+    .nav-tab:hover { color: #0D9488; }
+    .nav-tab.active { color: #0D9488; border-bottom-color: #0D9488; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
     main { display: grid; grid-template-columns: 1fr 300px; gap: 2rem; }
     .video-player { background: #0A1628; border: 1px solid #0D9488; border-radius: 8px; padding: 20px; }
     .placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0D9488, #0A1628); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 80px; margin-bottom: 20px; }
@@ -40,9 +50,26 @@
     .video-item { background: #0F1F35; border: 1px solid #1E293B; padding: 12px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; }
     .video-item:hover { border-color: #0D9488; background: #1E293B; }
     .video-item.active { background: #0D9488; color: #0A1628; border-color: #0D9488; }
-    footer { border-top: 1px solid #0D9488; padding: 20px 0; margin-top: 40px; text-align: center; color: #CBD5E1; }
     .loading { color: #0D9488; padding: 40px; text-align: center; }
-    @media (max-width: 768px) { main { grid-template-columns: 1fr; } .playlist { position: static; } }
+    footer { border-top: 1px solid #0D9488; padding: 20px 0; margin-top: 40px; text-align: center; color: #CBD5E1; }
+
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .course-card { background: #0A1628; border: 2px solid #1E293B; border-radius: 8px; padding: 20px; transition: all 0.3s; }
+    .course-card:hover { border-color: #0D9488; }
+    .course-card h3 { color: #0D9488; margin-bottom: 10px; font-size: 16px; }
+    .course-card p { color: #CBD5E1; font-size: 13px; margin-bottom: 15px; }
+    .course-price { font-size: 20px; color: #CA8A04; font-weight: bold; margin-bottom: 15px; }
+    .course-btn { width: 100%; padding: 10px; background: #0D9488; color: #0A1628; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
+    .course-btn:hover { background: #0FAB96; }
+    .course-btn.purchased { background: #10B981; }
+    .empty-state { text-align: center; padding: 40px; color: #CBD5E1; }
+    .empty-state-icon { font-size: 60px; margin-bottom: 20px; }
+
+    @media (max-width: 768px) {
+      main { grid-template-columns: 1fr; }
+      .playlist { position: static; }
+      header { flex-direction: column; gap: 15px; }
+    }
   </style>
 </head>
 <body>
@@ -100,7 +127,15 @@
       </div>
     </header>
 
-    <main>
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchSection('lecteur')">▶️ Lecteur Vidéo</button>
+      <button class="nav-tab" onclick="switchSection('boutique')">🛍️ Boutique</button>
+      <button class="nav-tab" onclick="switchSection('achats')">📚 Mes Achats</button>
+    </div>
+
+    <!-- Lecteur Section -->
+    <main id="lecteur-section" class="section active">
       <div class="video-player">
         <div id="loading" class="loading">Chargement des vidéos...</div>
         <div id="content" style="display:none;">
@@ -118,6 +153,18 @@
       </aside>
     </main>
 
+    <!-- Boutique Section -->
+    <section id="boutique-section" class="section">
+      <h2 style="color: #0D9488; margin-bottom: 20px;">🛍️ Boutique - Formations Disponibles</h2>
+      <div class="shop-grid" id="boutiqueListe"></div>
+    </section>
+
+    <!-- Mes Achats Section -->
+    <section id="achats-section" class="section">
+      <h2 style="color: #0D9488; margin-bottom: 20px;">📚 Mes Vidéos Achetées</h2>
+      <div id="achatsList"></div>
+    </section>
+
     <footer>
       <p>© 2024 Vincula Formation • Formations vidéo professionnelles</p>
     </footer>
@@ -127,11 +174,18 @@
     let videos = [];
     let current = null;
     let currentUser = null;
+    let purchasedCourses = {};
 
-    console.log('🚀 Script starting...');
-    console.log('DOM ready:', document.readyState);
+    const allCourses = [
+      { id: 1, title: "Initiation à la Voile", price: 29.99, desc: "Apprendre les bases de la navigation", category: "Voile" },
+      { id: 2, title: "Moteur & Entretien", price: 49.99, desc: "Maintenance et réparation moteur", category: "Moteur" },
+      { id: 3, title: "Navigation Côtière", price: 39.99, desc: "Les secrets de la navigation côtière", category: "Navigation" },
+      { id: 4, title: "Météo Marine", price: 34.99, desc: "Comprendre la météo en mer", category: "Sécurité" },
+      { id: 5, title: "Nœuds & Gréement", price: 24.99, desc: "Les nœuds essentiels du marin", category: "Voile" },
+      { id: 6, title: "Sécurité en Mer", price: 44.99, desc: "Protocoles de sécurité maritime", category: "Sécurité" }
+    ];
 
-    // ===== AUTHENTIFICATION =====
+    // ===== AUTH =====
     function openAuthModal() {
       document.getElementById('authModal').classList.add('active');
       document.getElementById('loginForm').style.display = 'block';
@@ -152,16 +206,11 @@
     function handleLogin() {
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
-
       if (!email || !password) {
         alert('⚠️ Veuillez remplir tous les champs');
         return;
       }
-
-      // Simulation d'authentification
       currentUser = { email: email, name: email.split('@')[0] };
-      console.log('✅ Connecté:', currentUser);
-
       closeAuthModal();
       updateAuthUI();
       alert('✅ Bienvenue ' + currentUser.name + '!');
@@ -171,23 +220,18 @@
       const name = document.getElementById('registerName').value;
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
-
       if (!name || !email || !password) {
         alert('⚠️ Veuillez remplir tous les champs');
         return;
       }
-
       currentUser = { email: email, name: name };
-      console.log('✅ Compte créé:', currentUser);
-
       closeAuthModal();
       updateAuthUI();
-      alert('✅ Compte créé avec succès! Bienvenue ' + currentUser.name + '!');
+      alert('✅ Compte créé! Bienvenue ' + currentUser.name + '!');
     }
 
     function handleLogout() {
       currentUser = null;
-      console.log('❌ Déconnexion');
       updateAuthUI();
       alert('👋 Vous avez été déconnecté');
     }
@@ -196,35 +240,33 @@
       const authSection = document.getElementById('authSection');
       if (currentUser) {
         authSection.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <span class="user-info">👤 ${currentUser.name}</span>
+          <div class="user-info">
+            <span>👤 ${currentUser.name}</span>
             <button class="auth-btn logout-btn" onclick="handleLogout()">📤 Déconnexion</button>
           </div>
         `;
+        renderBoutique();
+        renderAchats();
       } else {
         authSection.innerHTML = '<button class="auth-btn" onclick="openAuthModal()">🔐 Se Connecter</button>';
       }
     }
 
-    function initApp() {
-      console.log('📡 Fetching videos from local API...');
-      const apiUrl = '/api/videos';
-      console.log('URL:', apiUrl);
+    // ===== NAVIGATION =====
+    function switchSection(sectionName) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(sectionName + '-section').classList.add('active');
+      event.target.classList.add('active');
+    }
 
-      fetch(apiUrl)
+    // ===== VIDEOS =====
+    function initApp() {
+      console.log('📡 Fetching videos...');
+      fetch('/api/videos')
         .then(r => {
-          console.log('✅ Response received:', r.status, r.statusText);
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
           return r.json();
-        })
-        .then(data => {
-          console.log('✅ Data parsed. Videos count:', data.length);
-          if (Array.isArray(data) && data.length > 0) {
-            console.log('First video:', data[0]);
-          } else {
-            console.warn('⚠️ Data is not array or empty:', data);
-          }
-          return data;
         })
         .then(data => {
           videos = data;
@@ -232,23 +274,19 @@
             current = 0;
             showVideo(0);
             renderPlaylist();
-            console.log('✅ App initialized successfully with', videos.length, 'videos');
           } else {
-            console.warn('⚠️ No videos returned from API');
-            document.getElementById('loading').textContent = '⚠️ Aucune vidéo trouvée';
+            document.getElementById('loading').textContent = '⚠️ Aucune vidéo disponible';
           }
         })
         .catch(err => {
-          console.error('❌ Error:', err);
-          document.getElementById('loading').textContent = `❌ Erreur: ${err.message}`;
+          console.error('Erreur:', err);
+          document.getElementById('loading').textContent = '❌ Erreur: ' + err.message;
         });
     }
-
 
     function showVideo(i) {
       current = i;
       const v = videos[i];
-      console.log('📺 Showing video', i, ':', v.title.rendered);
       document.getElementById('videoTitle').textContent = v.title.rendered;
       document.getElementById('videoDesc').innerHTML = v.content.rendered;
       document.getElementById('loading').style.display = 'none';
@@ -259,7 +297,6 @@
     }
 
     function renderPlaylist() {
-      console.log('🎬 Rendering playlist with', videos.length, 'videos');
       const html = videos.map((v, i) => `
         <div class="video-item ${i === 0 ? 'active' : ''}" onclick="showVideo(${i})">
           🎥 ${v.title.rendered}
@@ -268,12 +305,75 @@
       document.getElementById('videoList').innerHTML = html;
     }
 
-    // Start when DOM is ready
+    // ===== BOUTIQUE =====
+    function renderBoutique() {
+      const boutiqueListe = document.getElementById('boutiqueListe');
+      boutiqueListe.innerHTML = allCourses.map(course => `
+        <div class="course-card">
+          <h3>${course.title}</h3>
+          <p>${course.desc}</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <span class="course-price">${course.price}€</span>
+            <span style="color: #0D9488; font-size: 12px;">${course.category}</span>
+          </div>
+          <button class="course-btn ${purchasedCourses[course.id] ? 'purchased' : ''}"
+                  onclick="purchaseCourse(${course.id})"
+                  ${purchasedCourses[course.id] ? 'disabled' : ''}>
+            ${purchasedCourses[course.id] ? '✅ Acheté' : '🛒 Acheter'}
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function purchaseCourse(courseId) {
+      if (!currentUser) {
+        alert('⚠️ Connectez-vous pour acheter');
+        openAuthModal();
+        return;
+      }
+      if (purchasedCourses[courseId]) {
+        alert('✅ Vous avez déjà acheté cette formation!');
+        return;
+      }
+      const course = allCourses.find(c => c.id === courseId);
+      purchasedCourses[courseId] = true;
+      alert(`✅ Formation "${course.title}" achetée!\n💰 ${course.price}€`);
+      renderBoutique();
+      renderAchats();
+    }
+
+    // ===== MES ACHATS =====
+    function renderAchats() {
+      const achatsList = document.getElementById('achatsList');
+      const purchased = allCourses.filter(c => purchasedCourses[c.id]);
+      if (purchased.length === 0) {
+        achatsList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <p>Vous n'avez pas encore acheté de formation.</p>
+          </div>
+        `;
+        return;
+      }
+      achatsList.innerHTML = `
+        <div style="background: #0A1628; border-radius: 8px; padding: 20px;">
+          ${purchased.map(course => `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0F1F35; border-radius: 6px; border-left: 4px solid #0D9488; margin-bottom: 10px;">
+              <div>
+                <h4 style="color: #0D9488; margin-bottom: 5px;">▶️ ${course.title}</h4>
+                <p style="color: #CBD5E1; font-size: 13px;">${course.desc}</p>
+              </div>
+              <button class="course-btn" style="width: 120px;" onclick="alert('🎬 ${course.title}')">📺 Regarder</button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Init
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initApp);
-      console.log('📋 DOM not ready yet, waiting for DOMContentLoaded...');
     } else {
-      console.log('📋 DOM already ready, initializing now...');
       initApp();
     }
   </script>
