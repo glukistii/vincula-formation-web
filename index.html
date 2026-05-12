@@ -8,10 +8,10 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0F1F35; color: #FFF; line-height: 1.6; }
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-    header { background: #0A1628; border-bottom: 2px solid #0D9488; padding: 20px 0; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    header { background: linear-gradient(135deg, #0A1628 0%, #0F1F35 100%); border-bottom: 3px solid #0D9488; padding: 25px 0; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.1); }
     header .brand { flex: 1; }
-    header h1 { font-size: 28px; margin-bottom: 5px; }
-    header p { color: #CBD5E1; }
+    header h1 { font-size: 32px; margin-bottom: 8px; background: linear-gradient(135deg, #0D9488, #0FAB96); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700; }
+    header p { color: #CBD5E1; font-size: 14px; letter-spacing: 0.5px; }
     .auth-btn { background: #0D9488; color: #0A1628; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.3s; }
     .auth-btn:hover { background: #0FAB96; transform: translateY(-2px); }
     .logout-btn { background: #CA8A04; }
@@ -53,14 +53,14 @@
     .loading { color: #0D9488; padding: 40px; text-align: center; }
     footer { border-top: 1px solid #0D9488; padding: 20px 0; margin-top: 40px; text-align: center; color: #CBD5E1; }
 
-    .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .course-card { background: #0A1628; border: 2px solid #1E293B; border-radius: 8px; padding: 20px; transition: all 0.3s; }
-    .course-card:hover { border-color: #0D9488; }
-    .course-card h3 { color: #0D9488; margin-bottom: 10px; font-size: 16px; }
-    .course-card p { color: #CBD5E1; font-size: 13px; margin-bottom: 15px; }
-    .course-price { font-size: 20px; color: #CA8A04; font-weight: bold; margin-bottom: 15px; }
-    .course-btn { width: 100%; padding: 10px; background: #0D9488; color: #0A1628; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
-    .course-btn:hover { background: #0FAB96; }
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+    .course-card { background: #0A1628; border: 1px solid #1E293B; border-radius: 10px; padding: 25px; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
+    .course-card:hover { border-color: #0D9488; box-shadow: 0 8px 20px rgba(13, 148, 136, 0.2); transform: translateY(-4px); }
+    .course-card h3 { color: #0D9488; margin-bottom: 12px; font-size: 16px; font-weight: 600; line-height: 1.4; }
+    .course-card p { color: #CBD5E1; font-size: 13px; margin-bottom: 20px; line-height: 1.5; }
+    .course-price { font-size: 24px; color: #CA8A04; font-weight: 700; margin-bottom: 20px; }
+    .course-btn { width: 100%; padding: 12px 16px; background: #0D9488; color: #0A1628; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; }
+    .course-btn:hover { background: #0FAB96; transform: translateY(-2px); }
     .course-btn.purchased { background: #10B981; }
     .empty-state { text-align: center; padding: 40px; color: #CBD5E1; }
     .empty-state-icon { font-size: 60px; margin-bottom: 20px; }
@@ -129,9 +129,9 @@
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="switchSection('lecteur')">▶️ Lecteur Vidéo</button>
-      <button class="nav-tab" onclick="switchSection('boutique')">🛍️ Boutique</button>
-      <button class="nav-tab" onclick="switchSection('achats')">📚 Mes Achats</button>
+      <button class="nav-tab active" onclick="switchSection(this, 'lecteur')">▶️ Lecteur Vidéo</button>
+      <button class="nav-tab" onclick="switchSection(this, 'boutique')">🛍️ Boutique</button>
+      <button class="nav-tab" onclick="switchSection(this, 'achats')">📚 Mes Achats</button>
     </div>
 
     <!-- Lecteur Section -->
@@ -155,13 +155,19 @@
 
     <!-- Boutique Section -->
     <section id="boutique-section" class="section">
-      <h2 style="color: #0D9488; margin-bottom: 20px;">🛍️ Boutique - Formations Disponibles</h2>
-      <div class="shop-grid" id="boutiqueListe"></div>
+      <div style="margin-bottom: 30px;">
+        <h2 style="color: #0D9488; margin-bottom: 8px; font-size: 28px;">🛍️ Boutique Vincula Formation</h2>
+        <p style="color: #CBD5E1; font-size: 14px;">Tous nos formations, vidéos et livres en accès immédiat</p>
+      </div>
+      <div id="boutiqueListe"></div>
     </section>
 
     <!-- Mes Achats Section -->
     <section id="achats-section" class="section">
-      <h2 style="color: #0D9488; margin-bottom: 20px;">📚 Mes Vidéos Achetées</h2>
+      <div style="margin-bottom: 30px;">
+        <h2 style="color: #0D9488; margin-bottom: 8px; font-size: 28px;">📚 Mes Formations Achetées</h2>
+        <p style="color: #CBD5E1; font-size: 14px;">Retrouvez toutes vos formations achetées ici</p>
+      </div>
       <div id="achatsList"></div>
     </section>
 
@@ -177,12 +183,22 @@
     let purchasedCourses = {};
 
     const allCourses = [
-      { id: 1, title: "Initiation à la Voile", price: 29.99, desc: "Apprendre les bases de la navigation", category: "Voile" },
-      { id: 2, title: "Moteur & Entretien", price: 49.99, desc: "Maintenance et réparation moteur", category: "Moteur" },
-      { id: 3, title: "Navigation Côtière", price: 39.99, desc: "Les secrets de la navigation côtière", category: "Navigation" },
-      { id: 4, title: "Météo Marine", price: 34.99, desc: "Comprendre la météo en mer", category: "Sécurité" },
-      { id: 5, title: "Nœuds & Gréement", price: 24.99, desc: "Les nœuds essentiels du marin", category: "Voile" },
-      { id: 6, title: "Sécurité en Mer", price: 44.99, desc: "Protocoles de sécurité maritime", category: "Sécurité" }
+      // Offres groupées
+      { id: 1, title: "Pack Intégral — Vidéos & Bibliographie", price: 1249, desc: "4 modules vidéo + 6 livres + poster + Le bassin. La formule la plus complète.", category: "📦 Offre Groupée", badge: "BEST" },
+
+      // Formations vidéo
+      { id: 2, title: "Formation Théorique - Pack Complet", price: 1000, desc: "4 modules vidéo couvrant toute la théorie BCMA. À votre rythme.", category: "🎥 Formations Vidéo", badge: "COMPLET" },
+      { id: 3, title: "Le bassin", price: 10, desc: "Formation spécialisée sur l'abord thérapeutique de la sphère pelvienne.", category: "🎥 Formations Vidéo", badge: "" },
+      { id: 4, title: "Module 1 - Notions de base", price: 275, desc: "Les fondamentaux essentiels pour débuter en BCMA.", category: "🎥 Formations Vidéo", badge: "" },
+      { id: 5, title: "Module 2 - Chaînes AL & PL", price: 275, desc: "Apprenez les chaînes antéro-latérales et postéro-latérales.", category: "🎥 Formations Vidéo", badge: "" },
+      { id: 6, title: "Module 3 - Chaînes AM & PM", price: 275, desc: "Formation complète sur les chaînes antéro-médianes et postéro-médianes.", category: "🎥 Formations Vidéo", badge: "" },
+      { id: 7, title: "Module 4 - Chaînes PA/AP", price: 275, desc: "Les chaînes postéro-antérieures et antéro-postérieures.", category: "🎥 Formations Vidéo", badge: "" },
+
+      // Livres
+      { id: 8, title: "Pack Bibliographie Complet", price: 288, desc: "Les 6 livres essentiels de Philippe Campignion + poster.", category: "📚 Livres", badge: "COMPLET" },
+      { id: 9, title: "Les chaînes - Notions de base", price: 48, desc: "Le socle fondamental de la méthode des chaînes musculaires.", category: "📚 Livres", badge: "" },
+      { id: 10, title: "Respir-Actions", price: 60, desc: "Outil de référence pour professionnels et acteurs du corps.", category: "📚 Livres", badge: "" },
+      { id: 11, title: "Poster Anatomique - Chaînes Musculaires", price: 35, desc: "Poster 50×70cm toutes les chaînes musculaires GDS.", category: "📚 Poster", badge: "" }
     ];
 
     // ===== AUTH =====
@@ -253,11 +269,11 @@
     }
 
     // ===== NAVIGATION =====
-    function switchSection(sectionName) {
+    function switchSection(button, sectionName) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       document.getElementById(sectionName + '-section').classList.add('active');
-      event.target.classList.add('active');
+      button.classList.add('active');
     }
 
     // ===== VIDEOS =====
@@ -308,21 +324,39 @@
     // ===== BOUTIQUE =====
     function renderBoutique() {
       const boutiqueListe = document.getElementById('boutiqueListe');
-      boutiqueListe.innerHTML = allCourses.map(course => `
-        <div class="course-card">
-          <h3>${course.title}</h3>
-          <p>${course.desc}</p>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <span class="course-price">${course.price}€</span>
-            <span style="color: #0D9488; font-size: 12px;">${course.category}</span>
-          </div>
-          <button class="course-btn ${purchasedCourses[course.id] ? 'purchased' : ''}"
-                  onclick="purchaseCourse(${course.id})"
-                  ${purchasedCourses[course.id] ? 'disabled' : ''}>
-            ${purchasedCourses[course.id] ? '✅ Acheté' : '🛒 Acheter'}
-          </button>
-        </div>
-      `).join('');
+      // Grouper par catégorie
+      const byCategory = {};
+      allCourses.forEach(course => {
+        if (!byCategory[course.category]) byCategory[course.category] = [];
+        byCategory[course.category].push(course);
+      });
+
+      let html = '';
+      Object.entries(byCategory).forEach(([category, courses]) => {
+        html += `<div style="margin-bottom: 40px;">
+          <h3 style="color: #0D9488; font-size: 18px; margin-bottom: 20px; border-bottom: 2px solid #1E293B; padding-bottom: 10px;">${category}</h3>
+          <div class="shop-grid">`;
+
+        courses.forEach(course => {
+          html += `
+            <div class="course-card">
+              ${course.badge ? `<div style="background: #CA8A04; color: #0A1628; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: inline-block;">${course.badge}</div>` : ''}
+              <h3>${course.title}</h3>
+              <p>${course.desc}</p>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span class="course-price">${course.price.toFixed(0)}€</span>
+              </div>
+              <button class="course-btn ${purchasedCourses[course.id] ? 'purchased' : ''}"
+                      onclick="purchaseCourse(${course.id})"
+                      ${purchasedCourses[course.id] ? 'disabled' : ''}>
+                ${purchasedCourses[course.id] ? '✅ Acheté' : '🛒 Acheter'}
+              </button>
+            </div>
+          `;
+        });
+        html += '</div></div>';
+      });
+      boutiqueListe.innerHTML = html;
     }
 
     function purchaseCourse(courseId) {
@@ -372,9 +406,15 @@
 
     // Init
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initApp);
+      document.addEventListener('DOMContentLoaded', () => {
+        initApp();
+        renderBoutique();
+        renderAchats();
+      });
     } else {
       initApp();
+      renderBoutique();
+      renderAchats();
     }
   </script>
 </body>
