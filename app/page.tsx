@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase/client';
 
 interface Video {
   id: number;
@@ -15,12 +16,19 @@ interface Video {
 
 export default function HomePage() {
   const [videos, setVideos] = useState<Video[]>([]);
+  const [user, setUser] = useState<{ email: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchVideos() {
+    async function loadData() {
       try {
+        // Check authentication
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+
+        // Fetch videos
         const response = await fetch('/api/videos');
         if (!response.ok) throw new Error('Erreur lors du chargement');
 
@@ -33,7 +41,7 @@ export default function HomePage() {
       }
     }
 
-    fetchVideos();
+    loadData();
   }, []);
 
   return (
@@ -49,18 +57,43 @@ export default function HomePage() {
           </p>
           {!loading && (
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Link
-                href="/register"
-                className="rounded-lg bg-teal-600 px-8 py-3 font-semibold text-white transition hover:bg-teal-700"
-              >
-                Créer un compte
-              </Link>
-              <Link
-                href="/login"
-                className="rounded-lg border border-teal-600 px-8 py-3 font-semibold text-teal-400 transition hover:bg-teal-600/10"
-              >
-                Se connecter
-              </Link>
+              {user ? (
+                <>
+                  <Link
+                    href="/videos"
+                    className="rounded-lg bg-teal-600 px-8 py-3 font-semibold text-white transition hover:bg-teal-700"
+                  >
+                    Mes Vidéos
+                  </Link>
+                  <Link
+                    href="/boutique"
+                    className="rounded-lg border border-teal-600 px-8 py-3 font-semibold text-teal-400 transition hover:bg-teal-600/10"
+                  >
+                    Boutique
+                  </Link>
+                  <Link
+                    href="/compte"
+                    className="rounded-lg border border-teal-600 px-8 py-3 font-semibold text-teal-400 transition hover:bg-teal-600/10"
+                  >
+                    Mon Compte
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/register"
+                    className="rounded-lg bg-teal-600 px-8 py-3 font-semibold text-white transition hover:bg-teal-700"
+                  >
+                    Créer un compte
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="rounded-lg border border-teal-600 px-8 py-3 font-semibold text-teal-400 transition hover:bg-teal-600/10"
+                  >
+                    Se connecter
+                  </Link>
+                </>
+              )}
             </div>
           )}
         </div>
