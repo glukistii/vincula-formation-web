@@ -88,10 +88,10 @@ export default function VideosPage() {
 
         {videos.length === 0 ? (
           <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-12 text-center">
-            <div className="mb-4 text-5xl">🎬</div>
-            <h2 className="mb-2 text-xl font-semibold text-white">Aucune vidéo achetée</h2>
+            <div className="mb-4 text-5xl">📚</div>
+            <h2 className="mb-2 text-xl font-semibold text-white">Aucune formation achetée</h2>
             <p className="mb-6 text-slate-400">
-              Visitez la boutique pour acheter vos premières vidéos de formation
+              Visitez la boutique pour acheter vos formations paramédicales
             </p>
             <Link
               href="/boutique"

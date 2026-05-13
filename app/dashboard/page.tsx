@@ -52,7 +52,7 @@ export default function DashboardPage() {
             Bienvenue, {userName}!
           </h1>
           <p className="text-slate-300">
-            Connecté en tant que {user?.email}
+            Accédez à vos formations paramédicales
           </p>
         </div>
 

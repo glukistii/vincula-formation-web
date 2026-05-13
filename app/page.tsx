@@ -42,10 +42,10 @@ export default function HomePage() {
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="mb-4 text-4xl font-bold text-white sm:text-5xl">
-            Formation Maritime de Qualité
+            Formations Paramédicales en Ligne
           </h1>
           <p className="mb-8 text-lg text-slate-300">
-            Accédez à nos vidéos de formation exclusives pour navigateurs confirmés
+            Accédez à nos vidéos de formation pour kinésithérapeutes, BCMA et podologues
           </p>
           {!loading && (
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -69,7 +69,7 @@ export default function HomePage() {
       {/* Videos Grid */}
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <h2 className="mb-8 text-2xl font-bold text-white">Vidéos Disponibles</h2>
+          <h2 className="mb-8 text-2xl font-bold text-white">Formations Disponibles</h2>
 
           {loading && (
             <div className="flex justify-center py-12">
@@ -85,7 +85,7 @@ export default function HomePage() {
 
           {!loading && videos.length === 0 && (
             <div className="text-center text-slate-400">
-              Aucune vidéo disponible pour le moment.
+              Aucune formation disponible pour le moment.
             </div>
           )}
 
@@ -123,7 +123,7 @@ export default function HomePage() {
                       <p className="mb-4 line-clamp-2 text-sm text-slate-400">
                         {video.description
                           ? video.description.replace(/<[^>]*>/g, '')
-                          : 'Formation maritime'}
+                          : 'Formation professionnelle'}
                       </p>
                       <div className="flex items-center justify-between">
                         <span className="text-xl font-bold text-teal-400">
