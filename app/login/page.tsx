@@ -20,27 +20,17 @@ function LoginForm() {
     setLoading(true);
     try {
       const supabase = createClient();
-      console.log('[Login] Supabase client created');
-      console.log('[Login] Environment variables:', {
-        url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-        keyExists: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      });
-
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      console.log('[Login] Auth response:', { data, error });
-
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       setLoading(false);
+
       if (error) {
-        console.error('[Login] Auth error:', error);
         setError(`Erreur d'authentification: ${error.message}`);
         return;
       }
 
-      console.log('[Login] Authentication successful, redirecting...');
       router.refresh();
       router.push(next);
     } catch (err) {
-      console.error('[Login] Exception during login:', err);
       setLoading(false);
       setError(`Erreur: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
     }
