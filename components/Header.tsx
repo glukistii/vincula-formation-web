@@ -4,29 +4,52 @@ import { UserMenu } from '@/components/UserMenu';
 import { NavTabs } from '@/components/NavTabs';
 
 export async function Header() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  let user = null;
   let profileName: string | null = null;
   let isAdmin = false;
-  if (user) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('full_name, email, is_admin')
-      .eq('id', user.id)
-      .single();
-    profileName = data?.full_name || data?.email?.split('@')[0] || null;
-    isAdmin = !!data?.is_admin;
+
+  try {
+    const supabase = await createClient();
+
+    try {
+      const {
+        data: { user: authUser },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError) {
+        console.error('[Header] Auth error:', authError);
+      } else if (authUser) {
+        user = authUser;
+
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('full_name, email, is_admin')
+            .eq('id', authUser.id)
+            .single();
+
+          if (error) {
+            console.error('[Header] Profile query error:', error);
+          } else if (data) {
+            profileName = data.full_name || data.email?.split('@')[0] || null;
+            isAdmin = !!data.is_admin;
+          }
+        } catch (profileError) {
+          console.error('[Header] Profile fetch exception:', profileError);
+        }
+      }
+    } catch (authCheckError) {
+      console.error('[Header] Auth check exception:', authCheckError);
+    }
+  } catch (supabaseError) {
+    console.error('[Header] Supabase client error:', supabaseError);
   }
 
   return (
     <header className="border-b border-neutral-200 bg-white">
       <div className="container-page flex flex-col gap-4 py-5 md:flex-row md:items-center md:justify-between">
         <Link href="/" className="flex items-center gap-3">
-          {/* Using a regular <img> so we don't have to whitelist localhost in next/image */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://vincula-formation.com/wp-content/uploads/2025/12/icone-e1767854840484.jpg"
             alt="Vincula"
