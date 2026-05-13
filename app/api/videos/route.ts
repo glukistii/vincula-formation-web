@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getProducts, getOrdersByEmail } from '@/lib/woocommerce';
 
+// Calculate if purchase is still valid (less than 1 year old)
+function isAccessValid(dateCreated: string): boolean {
+  const purchaseDate = new Date(dateCreated);
+  const expirationDate = new Date(purchaseDate);
+  expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+  return new Date() < expirationDate;
+}
+
+// Get expiration date for a purchase
+function getExpirationDate(dateCreated: string): Date {
+  const purchaseDate = new Date(dateCreated);
+  const expirationDate = new Date(purchaseDate);
+  expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+  return expirationDate;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -11,12 +27,27 @@ export async function GET(request: NextRequest) {
 
     // If email provided, fetch user's purchased videos
     let purchasedVideoIds: number[] = [];
+    let videoExpirations: Record<number, { expireAt: string; isExpired: boolean }> = {};
+
     if (email) {
       const orders = await getOrdersByEmail(email);
-      // Extract product IDs from orders
-      purchasedVideoIds = orders
-        .flatMap((order: any) => order.line_items)
-        .map((item: any) => item.product_id);
+
+      // Process each order and check expiration
+      orders.forEach((order: any) => {
+        const isValid = isAccessValid(order.date_created);
+        const expirationDate = getExpirationDate(order.date_created);
+
+        order.line_items.forEach((item: any) => {
+          purchasedVideoIds.push(item.product_id);
+          videoExpirations[item.product_id] = {
+            expireAt: expirationDate.toISOString(),
+            isExpired: !isValid,
+          };
+        });
+      });
+
+      // Remove duplicates
+      purchasedVideoIds = [...new Set(purchasedVideoIds)];
     }
 
     // Format response
@@ -27,9 +58,13 @@ export async function GET(request: NextRequest) {
         description: product.description,
         price: parseFloat(product.price),
         image: product.images?.[0]?.src || null,
-        downloads: product.downloads || [], // Array of downloadable files (videos)
+        downloads: product.downloads || [],
+        accessInfo: purchasedVideoIds.includes(product.id)
+          ? videoExpirations[product.id]
+          : null,
       })),
-      purchased_ids: purchasedVideoIds,
+      purchased_ids: purchasedVideoIds.filter((id) => !videoExpirations[id]?.isExpired),
+      expired_ids: purchasedVideoIds.filter((id) => videoExpirations[id]?.isExpired),
       user_email: email || null,
     };
 
