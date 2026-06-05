@@ -76,7 +76,7 @@ export default function CoursPrivesPage() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">📚 Cours Privés</h1>
           <p className="text-slate-300">
-            Trouvez le professeur idéal pour vos cours de navigation
+            Trouvez le professeur idéal pour vos cours privés BCMA
           </p>
         </div>
 
