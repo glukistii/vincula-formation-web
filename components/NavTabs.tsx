@@ -12,6 +12,7 @@ const authenticatedTabs = [
   { href: '/dashboard', label: '🏠 Dashboard' },
   { href: '/videos', label: '🎬 Mes Vidéos' },
   { href: '/boutique', label: '🛍️ Boutique' },
+  { href: '/cours-prives', label: '📚 Cours Privés' },
   { href: '/compte', label: '👤 Mon Compte' },
 ];
 
@@ -21,7 +22,7 @@ export function NavTabs({ isAdmin = false }: Props) {
   const pathname = usePathname();
 
   // Show authenticated nav if on authenticated pages
-  const isAuthenticatedPage = ['/dashboard', '/videos', '/boutique', '/compte'].some(
+  const isAuthenticatedPage = ['/dashboard', '/videos', '/boutique', '/cours-prives', '/compte'].some(
     (path) => pathname === path || pathname.startsWith(path)
   );
 
