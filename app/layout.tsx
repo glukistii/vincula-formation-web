@@ -5,6 +5,8 @@ import { Footer } from '@/components/Footer';
 import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister';
 import './globals.css';
 
+export const dynamic = 'force-dynamic';
+
 const playfair = Playfair_Display({
   subsets: ['latin'],
   weight: ['700', '800', '900'],
